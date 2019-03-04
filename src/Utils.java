@@ -35,6 +35,25 @@ public class Utils {
 
          */
 
+        String[] lines = data.split("\n");
+        for (int i = 0; i < lines.length; i++) {
+            String dataline = lines[i];
+            System.out.println(dataline.charAt(0));
+            int indexOfFirstQuote = dataline.indexOf("\"");
+            int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote+1);
+            String removedQuote = dataline.substring(indexOfFirstQuote+1, indexOfSecondQuote);
+            String noQuotes = dataline.substring(2, indexOfFirstQuote) + removedQuote + dataline.substring(indexOfSecondQuote + 1, dataline.length());
+            int indexOfPercent = dataline.indexOf("%");
+            String noPercent = noQuotes.substring(0, indexOfPercent) + noQuotes.substring(indexOfPercent+1, noQuotes.length());
+            String[] filteredData = noPercent.split(",");
+            
+            output.add(createObject(filteredData));
+            
+        }
         return output;
     }
+
+    private static ElectionResult createObject(String[] filteredData) {
+    }
+
 }
