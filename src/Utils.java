@@ -40,15 +40,24 @@ public class Utils {
             String dataline = lines[i];
             System.out.println(dataline.charAt(0));
             int indexOfFirstQuote = dataline.indexOf("\"");
-            int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote+1);
-            String removedQuote = dataline.substring(indexOfFirstQuote+1, indexOfSecondQuote);
-            String noQuotes = dataline.substring(2, indexOfFirstQuote) + removedQuote + dataline.substring(indexOfSecondQuote + 1, dataline.length());
+            int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote + 1);
+            String filtered = removeCommas(dataline.substring(indexOfFirstQuote + 1, indexOfSecondQuote));
+            String noQuotes = dataline.substring(2, indexOfFirstQuote) + filtered + dataline.substring(indexOfSecondQuote + 1, dataline.length());
             int indexOfPercent = dataline.indexOf("%");
-            String noPercent = noQuotes.substring(0, indexOfPercent) + noQuotes.substring(indexOfPercent+1, noQuotes.length());
+            String noPercent = noQuotes.substring(0, indexOfPercent) + noQuotes.substring(indexOfPercent + 1, noQuotes.length());
             String[] filteredData = noPercent.split(",");
-            
+
             output.add(createObject(filteredData));
-            
+
+        }
+        return output;
+    }
+
+    private static String removeCommas(String str) {
+        String[] temp = str.split("'");
+        String output = "";
+        for (int i = 0; i < temp.length; i++) {
+            output += temp[i];
         }
         return output;
     }
