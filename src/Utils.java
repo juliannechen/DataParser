@@ -23,10 +23,11 @@ public class Utils {
 
     public static ArrayList<ElectionResult> parse2016ElectionResults(String data) {
         ArrayList<ElectionResult> output = new ArrayList<>();
+
         /* split by \n
             loop over rows starting at index 1
             for each row {
-                remove , between " " and % characters
+                remove , between " " and remove % characters
                 split by comma
                 create new ElectionResult object
                 add to list
