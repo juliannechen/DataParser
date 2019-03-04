@@ -54,6 +54,20 @@ public class Utils {
     }
 
     private static ElectionResult createObject(String[] filteredData) {
+        ElectionResult e = null;
+        e.setVotes_dem(Double.parseDouble(filteredData[0]));
+        e.setVotes_gop(Double.parseDouble(filteredData[1]));
+        e.setTotal_votes(Double.parseDouble(filteredData[2]));
+        e.setPer_dem(Double.parseDouble(filteredData[3]));
+        e.setPer_gop(Double.parseDouble(filteredData[4]));
+
+        e.setDiff(Integer.parseInt(filteredData[5]));
+        e.setPer_point_diff(Double.parseDouble(filteredData[6]));
+        e.setPer_gop(Double.parseDouble(filteredData[7]));
+        e.setPer_gop(Double.parseDouble(filteredData[8]));
+        e.setDiff(Integer.parseInt(filteredData[9]));
+
+        return e;
     }
 
 }
