@@ -24,29 +24,17 @@ public class Utils {
     public static ArrayList<ElectionResult> parse2016ElectionResults(String data) {
         ArrayList<ElectionResult> output = new ArrayList<>();
 
-        /* split by \n
-            loop over rows starting at index 1
-            for each row {
-                remove , between " " and remove % characters
-                split by comma
-                create new ElectionResult object
-                add to list
-             }
-
-         */
-
         String[] lines = data.split("\n");
-        for (int i = 0; i < lines.length; i++) {
+        for (int i = 1; i < lines.length; i++) {
+            int test = i;
+            System.out.println("line: " + (test-1));
             String dataline = lines[i];
-            System.out.println(dataline.charAt(0));
             int indexOfFirstQuote = dataline.indexOf("\"");
             int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote + 1);
-            String filtered = removeCommas(dataline.substring(indexOfFirstQuote + 1, indexOfSecondQuote));
-            String noQuotes = dataline.substring(2, indexOfFirstQuote) + filtered + dataline.substring(indexOfSecondQuote + 1, dataline.length());
-            int indexOfPercent = dataline.indexOf("%");
-            String noPercent = noQuotes.substring(0, indexOfPercent) + noQuotes.substring(indexOfPercent + 1, noQuotes.length());
-            String[] filteredData = noPercent.split(",");
-
+            String filterComma = removeCommas(dataline.substring(indexOfFirstQuote + 1, indexOfSecondQuote));
+            String filterQuote = dataline.substring(0, indexOfFirstQuote) + filterComma + dataline.substring(indexOfSecondQuote + 1, dataline.length());
+            String filterPrecent = filterQuote.replace("%", "");
+            String[] filteredData = filterPrecent.split(",");
             output.add(createObject(filteredData));
 
         }
@@ -54,7 +42,7 @@ public class Utils {
     }
 
     private static String removeCommas(String str) {
-        String[] temp = str.split("'");
+        String[] temp = str.split(",");
         String output = "";
         for (int i = 0; i < temp.length; i++) {
             output += temp[i];
@@ -63,20 +51,20 @@ public class Utils {
     }
 
     private static ElectionResult createObject(String[] filteredData) {
-        ElectionResult e = null;
-        e.setVotes_dem(Double.parseDouble(filteredData[0]));
-        e.setVotes_gop(Double.parseDouble(filteredData[1]));
-        e.setTotal_votes(Double.parseDouble(filteredData[2]));
-        e.setPer_dem(Double.parseDouble(filteredData[3]));
-        e.setPer_gop(Double.parseDouble(filteredData[4]));
+        double votes_dem = (Double.parseDouble(filteredData[1]));
+        double votes_gop = (Double.parseDouble(filteredData[2]));
+        double total_votes = (Double.parseDouble(filteredData[3]));
+        double per_dem = (Double.parseDouble(filteredData[4]));
+        double per_gop = (Double.parseDouble(filteredData[5]));
+        int diff = (Integer.parseInt(filteredData[6]));
+        double per_point_diff = (Double.parseDouble(filteredData[7]));
+        String state_abbr = filteredData[8];
+        String county_name = filteredData[9];
+        int combined_fips = (Integer.parseInt(filteredData[10]));
 
-        e.setDiff(Integer.parseInt(filteredData[5]));
-        e.setPer_point_diff(Double.parseDouble(filteredData[6]));
-        e.setPer_gop(Double.parseDouble(filteredData[7]));
-        e.setPer_gop(Double.parseDouble(filteredData[8]));
-        e.setDiff(Integer.parseInt(filteredData[9]));
-
+        ElectionResult e = new ElectionResult(votes_dem,votes_gop,total_votes,per_dem,per_gop,diff,per_point_diff,state_abbr,county_name, combined_fips);
         return e;
+
     }
 
 }

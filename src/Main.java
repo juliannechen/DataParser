@@ -8,10 +8,9 @@ public class Main {
         //Test of utils
 
         String data = Utils.readFileAsString("data/2016_Presidential_Results.csv");
-        String test = "hello,\"1234\"";
-        Utils.parse2016ElectionResults(test);
 
-        //ArrayList<ElectionResult> results = Utils.parse2016ElectionResults(data);
+        ArrayList<ElectionResult> results = Utils.parse2016ElectionResults(data);
+        System.out.println(results);
 
     }
 }
