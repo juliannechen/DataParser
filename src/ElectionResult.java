@@ -97,17 +97,6 @@ public class ElectionResult {
     }
 
     public String toString() {
-        return "ElectionResult{" +
-                "votes_dem=" + votes_dem +
-                ", votes_gop=" + votes_gop +
-                ", total_votes=" + total_votes +
-                ", per_dem=" + per_dem +
-                ", per_gop=" + per_gop +
-                ", diff=" + diff +
-                ", per_point_diff=" + per_point_diff +
-                ", state_abbr='" + state_abbr + '\'' +
-                ", county_name='" + county_name + '\'' +
-                ", combined_fips=" + combined_fips +
-                '}';
+        return votes_dem + ", " + votes_gop + ", " + total_votes + ", " + per_dem + ", " + per_gop + ", " + diff + ", " + per_point_diff + ", " + state_abbr  + ", " + county_name + ", " + combined_fips;
     }
 }

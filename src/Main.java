@@ -10,7 +10,9 @@ public class Main {
         String data = Utils.readFileAsString("data/2016_Presidential_Results.csv");
 
         ArrayList<ElectionResult> results = Utils.parse2016ElectionResults(data);
-        System.out.println(results);
+        for (ElectionResult e : results) {
+            System.out.println(e.toString());
+        }
 
     }
 }

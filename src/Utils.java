@@ -27,27 +27,27 @@ public class Utils {
         String[] lines = data.split("\n");
         for (int i = 1; i < lines.length; i++) {
             int test = i;
-            System.out.println("line: " + (test-1));
             String dataline = lines[i];
-            int indexOfFirstQuote = dataline.indexOf("\"");
-            int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote + 1);
-            String filterComma = removeCommas(dataline.substring(indexOfFirstQuote + 1, indexOfSecondQuote));
-            String filterQuote = dataline.substring(0, indexOfFirstQuote) + filterComma + dataline.substring(indexOfSecondQuote + 1, dataline.length());
-            String filterPrecent = filterQuote.replace("%", "");
+            String filtered = filterQuotesAndCommas(dataline);
+            String filterPrecent = filtered.replace("%", "");
             String[] filteredData = filterPrecent.split(",");
             output.add(createObject(filteredData));
-
         }
+
         return output;
     }
 
+    private static String filterQuotesAndCommas(String dataline) {
+        if (!dataline.contains("\"")) return dataline;
+        int indexOfFirstQuote = dataline.indexOf("\"");
+        int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote + 1);
+        String filterComma = removeCommas(dataline.substring(indexOfFirstQuote + 1, indexOfSecondQuote));
+        String filterQuote = dataline.substring(0, indexOfFirstQuote) + filterComma + dataline.substring(indexOfSecondQuote + 1, dataline.length());
+        return filterQuote;
+    }
+
     private static String removeCommas(String str) {
-        String[] temp = str.split(",");
-        String output = "";
-        for (int i = 0; i < temp.length; i++) {
-            output += temp[i];
-        }
-        return output;
+        return str.replace(",", "");
     }
 
     private static ElectionResult createObject(String[] filteredData) {
@@ -62,7 +62,7 @@ public class Utils {
         String county_name = filteredData[9];
         int combined_fips = (Integer.parseInt(filteredData[10]));
 
-        ElectionResult e = new ElectionResult(votes_dem,votes_gop,total_votes,per_dem,per_gop,diff,per_point_diff,state_abbr,county_name, combined_fips);
+        ElectionResult e = new ElectionResult(votes_dem, votes_gop, total_votes, per_dem, per_gop, diff, per_point_diff, state_abbr, county_name, combined_fips);
         return e;
 
     }
