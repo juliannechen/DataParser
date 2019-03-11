@@ -21,49 +21,94 @@ public class Utils {
         return output.toString();
     }
 
-    public static ArrayList<ElectionResult> parse2016ElectionResults(String data) {
-        ArrayList<ElectionResult> output = new ArrayList<>();
+    public static DataManager parseAllData(String election, String education, String employment) {
 
-        String[] lines = data.split("\n");
-        for (int i = 1; i < lines.length; i++) {
-            int test = i;
-            String dataline = lines[i];
-            String filtered = filterQuotesAndCommas(dataline);
-            String filterPrecent = filtered.replace("%", "");
-            String[] filteredData = filterPrecent.split(",");
-            output.add(createObject(filteredData));
+    }
+
+    private static ArrayList<State> createStateList(ArrayList<String[]> election) {
+        ArrayList<State> stateList = new ArrayList<>();
+        for (String[] line : election) {
+            String stateName = line[1];
+            if(!stateList.contains(stateList)) {
+                State s = new State(stateName);
+                stateList.add(s);
+            }
         }
+        return stateList;
+    }
 
+//    public static ArrayList<Election> parse2016ElectionResults(String data) {
+//        ArrayList<Election> output = new ArrayList<>();
+//
+//        String[] lines = data.split("\n");
+//        for (int i = 1; i < lines.length; i++) { ;
+//            String dataline = lines[i];
+//            int indexOfFirstQuote = dataline.indexOf("\"");
+//            int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote + 1);
+//            String filter = cleanSubstring(dataline,indexOfFirstQuote, indexOfSecondQuote);
+//            String cleanString = cleanString(filter);
+//            String[] filteredData = cleanString.split(",");
+//
+//            Election election = new Election((Double.parseDouble(filteredData[1])), (Double.parseDouble(filteredData[2])), (Double.parseDouble(filteredData[3])));
+//            output.add(election);
+//        }
+//
+//        return output;
+//    }
+
+    public static ArrayList<String[]> parse(String data, int startIndex) {
+        ArrayList<String[]> output = new ArrayList<>();
+        String[] lines = data.split("\n");
+        for (int i = startIndex; i < lines.length; i++) {
+            int currentIndex = 0;
+            String dataline = lines[i];
+            dataline = cleanString(dataline);
+            while (dataline.contains("\"")) {
+                int indexOfFirstQuote = dataline.indexOf("\"", currentIndex);
+                int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote + 1);
+                dataline = cleanSubstring(dataline, indexOfFirstQuote, indexOfSecondQuote);
+                currentIndex = indexOfSecondQuote;
+            }
+            String[] filteredData = dataline.split(",");
+            output.add(filteredData);
+        }
         return output;
     }
+//
+//    public static ArrayList<Education> parseEducation(String data) {
+//        ArrayList<Education> output = new ArrayList<>();
+//        String[] lines = data.split("\n");
+//        for (int i = 5; i < lines.length; i++) {
+//            int currentIndex = 0;
+//            String dataline = lines[i];
+//            while (dataline.contains("\"")) {
+//                int indexOfFirstQuote = dataline.indexOf("\"", currentIndex);
+//                int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote + 1);
+//                dataline = cleanSubstring(dataline, indexOfFirstQuote, indexOfSecondQuote);
+//                currentIndex = indexOfSecondQuote;
+//            }
+//            String[] filteredData = dataline.split(",");
+//            Education education = new Education(Double.parseDouble(filteredData[7]), Double.parseDouble(filteredData[8]), Double.parseDouble(filteredData[9]), Double.parseDouble(filteredData[10]));
+//            output.add(education);
+//        }
+//        return output;
+//    }
 
-    private static String filterQuotesAndCommas(String dataline) {
-        if (!dataline.contains("\"")) return dataline;
-        int indexOfFirstQuote = dataline.indexOf("\"");
-        int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote + 1);
-        String filterComma = removeCommas(dataline.substring(indexOfFirstQuote + 1, indexOfSecondQuote));
-        String filterQuote = dataline.substring(0, indexOfFirstQuote) + filterComma + dataline.substring(indexOfSecondQuote + 1, dataline.length());
-        return filterQuote;
+    private static String cleanString(String temp) {
+        temp = temp.replaceAll("$", "");
+        temp = temp.replaceAll("%", "");
+        return temp;
     }
 
-    private static String removeCommas(String str) {
-        return str.replace(",", "");
-    }
+    private static String cleanSubstring(String str, int start, int end) {
+        if(start == -1) return str;
+        if(str.contains("[a-zA-Z]+")) return str.substring(start+1, end);
+        String temp = str.substring(start, end+1);
+        temp = temp.replaceAll("\"", "");
+        temp = temp.replaceAll(" ", "");
+        temp = temp.replaceAll( ",", "");
 
-    private static ElectionResult createObject(String[] filteredData) {
-        double votes_dem = (Double.parseDouble(filteredData[1]));
-        double votes_gop = (Double.parseDouble(filteredData[2]));
-        double total_votes = (Double.parseDouble(filteredData[3]));
-        double per_dem = (Double.parseDouble(filteredData[4]));
-        double per_gop = (Double.parseDouble(filteredData[5]));
-        int diff = (Integer.parseInt(filteredData[6]));
-        double per_point_diff = (Double.parseDouble(filteredData[7]));
-        String state_abbr = filteredData[8];
-        String county_name = filteredData[9];
-        int combined_fips = (Integer.parseInt(filteredData[10]));
-
-        ElectionResult e = new ElectionResult(votes_dem, votes_gop, total_votes, per_dem, per_gop, diff, per_point_diff, state_abbr, county_name, combined_fips);
-        return e;
+        return str.substring(0, start) + temp + str.substring(end+1, str.length());
 
     }
 
