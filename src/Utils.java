@@ -22,14 +22,61 @@ public class Utils {
     }
 
     public static DataManager parseAllData(String election, String education, String employment) {
+        ArrayList<String[]> electionArr = parse(election, 1);
+        ArrayList<String[]> educationArr = parse(election, 5);
+        ArrayList<String[]> employmentArr = parse(election, 8);
 
+        ArrayList<State> stateList = createStateList(employmentArr);
+        DataManager states = new DataManager(stateList);
+        ArrayList<County> countyList = createCountyList(employmentArr, stateList);
+
+        for (String[] dataline : electionArr) {
+            Election e = new Election((Double.parseDouble(dataline[1])), (Double.parseDouble(dataline[2])), (Double.parseDouble(dataline[3])));
+            int fips = Integer.parseInt(dataline[10]);
+            String countyName = dataline[9];
+            countyList.get(countyList.indexOf(countyName)).setFips(fips);
+            countyList.get(countyList.indexOf(countyName)).setVote(e);
+        }
+
+        for (String[] dataline : educationArr) {
+            Education e = new Education(Double.parseDouble(dataline[7]), Double.parseDouble(dataline[8]), Double.parseDouble(dataline[9]), Double.parseDouble(dataline[10]));
+            int fips = Integer.parseInt(dataline[0]);
+            String countyName = dataline[2];
+            countyList.get(countyList.indexOf(countyName)).setFips(fips);
+            countyList.get(countyList.indexOf(countyName)).setEducation(e);
+        }
+
+        for (String[] dataline : employmentArr) {
+            Employment e = new Employment((Integer.parseInt(dataline[7])), (Integer.parseInt(dataline[8])), (Integer.parseInt(dataline[9])), (Integer.parseInt(dataline[10])));
+            int fips = Integer.parseInt(dataline[0]);
+            String countyName = dataline[2];
+            countyList.get(countyList.indexOf(countyName)).setFips(fips);
+            countyList.get(countyList.indexOf(countyName)).setEmployment(e);
+        }
+
+        return states;
+
+    }
+
+    private static ArrayList<County> createCountyList(ArrayList<String[]> employment, ArrayList<State> stateList) {
+        ArrayList<County> countyList = new ArrayList<>();
+        for (String[] dataLine : employment) {
+            String stateName = dataLine[1];
+            String countyName = dataLine[2];
+            if (!countyList.contains(countyList)) {
+                County c = new County(countyName);
+                stateList.get(stateList.indexOf(stateName)).addCounty(c);
+                countyList.add(c);
+            }
+        }
+        return countyList;
     }
 
     private static ArrayList<State> createStateList(ArrayList<String[]> election) {
         ArrayList<State> stateList = new ArrayList<>();
-        for (String[] line : election) {
-            String stateName = line[1];
-            if(!stateList.contains(stateList)) {
+        for (String[] dataLine : election) {
+            String stateName = dataLine[1];
+            if (!stateList.contains(stateList)) {
                 State s = new State(stateName);
                 stateList.add(s);
             }
@@ -101,14 +148,14 @@ public class Utils {
     }
 
     private static String cleanSubstring(String str, int start, int end) {
-        if(start == -1) return str;
-        if(str.contains("[a-zA-Z]+")) return str.substring(start+1, end);
-        String temp = str.substring(start, end+1);
+        if (start == -1) return str;
+        if (str.contains("[a-zA-Z]+")) return str.substring(start + 1, end);
+        String temp = str.substring(start, end + 1);
         temp = temp.replaceAll("\"", "");
         temp = temp.replaceAll(" ", "");
-        temp = temp.replaceAll( ",", "");
+        temp = temp.replaceAll(",", "");
 
-        return str.substring(0, start) + temp + str.substring(end+1, str.length());
+        return str.substring(0, start) + temp + str.substring(end + 1, str.length());
 
     }
 
