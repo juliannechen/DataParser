@@ -1,14 +1,21 @@
 public class Employment {
-    private int totalLaborForce;
-    private int employedLaborForce;
-    private int unemployedLaborForce;
+    private int totalLaborForce, employedLaborForce, unemployedLaborForce;
     private double unemployedPercent;
+    private County county;
 
     public Employment(int totalLaborForce, int employedLaborForce, int unemployedLaborForce, double unemployedPercent) {
         this.totalLaborForce = totalLaborForce;
         this.employedLaborForce = employedLaborForce;
         this.unemployedLaborForce = unemployedLaborForce;
         this.unemployedPercent = unemployedPercent;
+    }
+
+    public County getCounty() {
+        return county;
+    }
+
+    public void setCounty(County county) {
+        this.county = county;
     }
 
     public int getTotalLaborForce() {

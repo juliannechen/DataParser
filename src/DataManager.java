@@ -7,6 +7,10 @@ public class DataManager {
         this.states = states;
     }
 
+    public void addState(State s) {
+        states.add(s);
+    }
+
     public ArrayList<State> getStates() {
         return states;
     }

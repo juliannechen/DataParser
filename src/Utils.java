@@ -22,15 +22,15 @@ public class Utils {
     }
 
     public static DataManager parseAllData(String election, String education, String employment) {
-        ArrayList<String[]> electionArr = parse(election, 1);
-        ArrayList<String[]> educationArr = parse(election, 5);
-        ArrayList<String[]> employmentArr = parse(election, 8);
+        String[] electionLines = cleanfile(election, 1);
+        String[] educationLines = cleanfile(education, 5);
+        String[] employmentLines = cleanfile(employment, 8);
 
-        ArrayList<State> stateList = createStateList(employmentArr);
+        ArrayList<State> stateList = createStateList(electionLines);
         DataManager states = new DataManager(stateList);
-        ArrayList<County> countyList = createCountyList(employmentArr, stateList);
+        ArrayList<County> countyList = createCountyList(electionLines, stateList);
 
-        for (String[] dataline : electionArr) {
+        for (String[] dataline : electionLines) {
             Election e = new Election((Double.parseDouble(dataline[1])), (Double.parseDouble(dataline[2])), (Double.parseDouble(dataline[3])));
             int fips = Integer.parseInt(dataline[10]);
             String countyName = dataline[9];
@@ -38,7 +38,7 @@ public class Utils {
             countyList.get(countyList.indexOf(countyName)).setVote(e);
         }
 
-        for (String[] dataline : educationArr) {
+        for (String[] dataline : educationLines) {
             Education e = new Education(Double.parseDouble(dataline[7]), Double.parseDouble(dataline[8]), Double.parseDouble(dataline[9]), Double.parseDouble(dataline[10]));
             int fips = Integer.parseInt(dataline[0]);
             String countyName = dataline[2];
@@ -46,7 +46,7 @@ public class Utils {
             countyList.get(countyList.indexOf(countyName)).setEducation(e);
         }
 
-        for (String[] dataline : employmentArr) {
+        for (String[] dataline : employmentLines) {
             Employment e = new Employment((Integer.parseInt(dataline[7])), (Integer.parseInt(dataline[8])), (Integer.parseInt(dataline[9])), (Integer.parseInt(dataline[10])));
             int fips = Integer.parseInt(dataline[0]);
             String countyName = dataline[2];
@@ -58,14 +58,14 @@ public class Utils {
 
     }
 
-    private static ArrayList<County> createCountyList(ArrayList<String[]> employment, ArrayList<State> stateList) {
+    private static ArrayList<County> createCountyList(ArrayList<String[]> employment) {
         ArrayList<County> countyList = new ArrayList<>();
         for (String[] dataLine : employment) {
             String stateName = dataLine[1];
             String countyName = dataLine[2];
-            if (!countyList.contains(countyList)) {
+            if (!countyList.contains(countyName)) {
                 County c = new County(countyName);
-                stateList.get(stateList.indexOf(stateName)).addCounty(c);
+                state.get(stateList.indexOf(stateName)).addCounty(c);
                 countyList.add(c);
             }
         }
@@ -75,7 +75,7 @@ public class Utils {
     private static ArrayList<State> createStateList(ArrayList<String[]> election) {
         ArrayList<State> stateList = new ArrayList<>();
         for (String[] dataLine : election) {
-            String stateName = dataLine[1];
+            String stateName = dataLine[8];
             if (!stateList.contains(stateList)) {
                 State s = new State(stateName);
                 stateList.add(s);
@@ -84,79 +84,40 @@ public class Utils {
         return stateList;
     }
 
-//    public static ArrayList<Election> parse2016ElectionResults(String data) {
-//        ArrayList<Election> output = new ArrayList<>();
-//
-//        String[] lines = data.split("\n");
-//        for (int i = 1; i < lines.length; i++) { ;
-//            String dataline = lines[i];
-//            int indexOfFirstQuote = dataline.indexOf("\"");
-//            int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote + 1);
-//            String filter = cleanSubstring(dataline,indexOfFirstQuote, indexOfSecondQuote);
-//            String cleanString = cleanString(filter);
-//            String[] filteredData = cleanString.split(",");
-//
-//            Election election = new Election((Double.parseDouble(filteredData[1])), (Double.parseDouble(filteredData[2])), (Double.parseDouble(filteredData[3])));
-//            output.add(election);
-//        }
-//
-//        return output;
-//    }
-
-    public static ArrayList<String[]> parse(String data, int startIndex) {
-        ArrayList<String[]> output = new ArrayList<>();
+    public static String[] cleanfile(String data, int startIndex) {
         String[] lines = data.split("\n");
         for (int i = startIndex; i < lines.length; i++) {
             int currentIndex = 0;
             String dataline = lines[i];
-            dataline = cleanString(dataline);
-            while (dataline.contains("\"")) {
-                int indexOfFirstQuote = dataline.indexOf("\"", currentIndex);
-                int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote + 1);
-                dataline = cleanSubstring(dataline, indexOfFirstQuote, indexOfSecondQuote);
-                currentIndex = indexOfSecondQuote;
-            }
-            String[] filteredData = dataline.split(",");
-            output.add(filteredData);
+            dataline = cleanLine(dataline);
+            lines[i-i] = dataline;
         }
-        return output;
-    }
-//
-//    public static ArrayList<Education> parseEducation(String data) {
-//        ArrayList<Education> output = new ArrayList<>();
-//        String[] lines = data.split("\n");
-//        for (int i = 5; i < lines.length; i++) {
-//            int currentIndex = 0;
-//            String dataline = lines[i];
-//            while (dataline.contains("\"")) {
-//                int indexOfFirstQuote = dataline.indexOf("\"", currentIndex);
-//                int indexOfSecondQuote = dataline.indexOf("\"", indexOfFirstQuote + 1);
-//                dataline = cleanSubstring(dataline, indexOfFirstQuote, indexOfSecondQuote);
-//                currentIndex = indexOfSecondQuote;
-//            }
-//            String[] filteredData = dataline.split(",");
-//            Education education = new Education(Double.parseDouble(filteredData[7]), Double.parseDouble(filteredData[8]), Double.parseDouble(filteredData[9]), Double.parseDouble(filteredData[10]));
-//            output.add(education);
-//        }
-//        return output;
-//    }
-
-    private static String cleanString(String temp) {
-        temp = temp.replaceAll("$", "");
-        temp = temp.replaceAll("%", "");
-        return temp;
+        return lines;
     }
 
-    private static String cleanSubstring(String str, int start, int end) {
-        if (start == -1) return str;
-        if (str.contains("[a-zA-Z]+")) return str.substring(start + 1, end);
-        String temp = str.substring(start, end + 1);
-        temp = temp.replaceAll("\"", "");
+    private static String cleanLine(String row) {
+        row = row.replaceAll("%", "");
+        int indexOfFirstQuote = row.indexOf("\"");
+        int indexOfSecondQuote = row.indexOf("\"", indexOfFirstQuote + 1);
+
+        while (indexOfFirstQuote != -1 && indexOfSecondQuote !=  -1) {
+            row = cleanSubstring(row, indexOfFirstQuote, indexOfSecondQuote);
+            indexOfFirstQuote = row.indexOf("\"");
+            indexOfSecondQuote = row.indexOf("\"", indexOfFirstQuote + 1);
+        }
+
+        return row;
+    }
+
+    private static String cleanSubstring(String str, int firstQuote, int secondQuote) {
+        if (str.contains("[a-zA-Z]+")) return str.substring(firstQuote + 1, secondQuote);
+        String before = str.substring(0, firstQuote);
+        String after = str.substring(secondQuote+1);
+
+        String temp = str.substring(firstQuote + 1, secondQuote);
         temp = temp.replaceAll(" ", "");
         temp = temp.replaceAll(",", "");
+        temp = temp.replaceAll("$", "");
 
-        return str.substring(0, start) + temp + str.substring(end + 1, str.length());
-
+        return before + temp + after;
     }
-
-}
