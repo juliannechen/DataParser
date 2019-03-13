@@ -7,12 +7,10 @@ public class Main {
     public static void main(String[] args) {
         //Test of utils
 
-        String data = Utils.readFileAsString("data/2016_Presidential_Results.csv");
-
-        ArrayList<ElectionResult> results = Utils.parse2016ElectionResults(data);
-        for (ElectionResult e : results) {
-            System.out.println(e.toString());
-        }
+        String election = Utils.readFileAsString("data/2016_Presidential_Results.csv");
+        String education = Utils.readFileAsString("data/Education.csv");
+        String employment = Utils.readFileAsString("data/Unemployment.csv");
 
     }
+
 }
