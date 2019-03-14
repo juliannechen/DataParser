@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 
 public class DataManager {
-    private ArrayList<State> states;
+    private static ArrayList<State> states;
 
     public DataManager(ArrayList<State> states) {
         this.states = states;
     }
 
-    public void loadAllData(String electionFile, String educationFile, String employmentFile) {
+    public static void loadAllData(String electionFile, String educationFile, String employmentFile) {
         String[] electionLines = Utils.cleanfile(electionFile, 1);
         String[] educationLines = Utils.cleanfile(educationFile, 5);
         String[] employmentLines = Utils.cleanfile(employmentFile, 8);
@@ -19,7 +19,7 @@ public class DataManager {
         loadEmploymentDataIntoObjects(employmentLines);
     }
 
-    private void loadEmploymentDataIntoObjects(String[] employmentLines) {
+    private static void loadEmploymentDataIntoObjects(String[] employmentLines) {
         for (String line : employmentLines) {
             String[] dataline = line.split(",");
             Employment e = new Employment((Integer.parseInt(dataline[7])), (Integer.parseInt(dataline[8])), (Integer.parseInt(dataline[9])), (Integer.parseInt(dataline[10])));
@@ -30,7 +30,7 @@ public class DataManager {
 
     }
 
-    private void loadELectionDataIntoObject(String[] electionLines) {
+    private static void loadELectionDataIntoObject(String[] electionLines) {
         for (String line : electionLines) {
             String[] dataline = line.split(",");
             Election e = new Election((Double.parseDouble(dataline[1])), (Double.parseDouble(dataline[2])), (Double.parseDouble(dataline[3])));
@@ -41,7 +41,7 @@ public class DataManager {
 
     }
 
-    private void loadEducationDataIntoObjects(String[] educationLines) {
+    private static void loadEducationDataIntoObjects(String[] educationLines) {
         for (String line : educationLines) {
             String[] dataline = line.split(",");
             Education e = new Education(Double.parseDouble(dataline[7]), Double.parseDouble(dataline[8]), Double.parseDouble(dataline[9]), Double.parseDouble(dataline[10]));
@@ -51,7 +51,7 @@ public class DataManager {
         }
     }
 
-    private County getCounty(String name) {
+    private static County getCounty(String name) {
         for (State state : states) {
             ArrayList<County> counties = state.getCounties();
             for (County county : counties) {
@@ -63,10 +63,11 @@ public class DataManager {
         return null;
     }
 
-    private void addCountyObjects(String[] lines) {
+    private static void addCountyObjects(String[] lines) {
         for (String line : lines) {
             String[] dataline = line.split(",");
             String stateName = dataline[8];
+            System.out.println("state name: " + stateName);
 
             State state = getState(stateName);
             if (state == null) {
@@ -75,12 +76,13 @@ public class DataManager {
             }
 
             String countyName = dataline[9];
+            System.out.println("county name: " + countyName);
             int fips = Integer.parseInt(dataline[10]);
             state.addCounty(new County(countyName, fips));
         }
     }
 
-    private State getState(String name) {
+    private static State getState(String name) {
         for (State state : states) {
             if (state.getName().equals(name)) return state;
         }

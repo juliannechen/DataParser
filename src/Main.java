@@ -11,6 +11,10 @@ public class Main {
         String education = Utils.readFileAsString("data/Education.csv");
         String employment = Utils.readFileAsString("data/Unemployment.csv");
 
+        DataManager.loadAllData(election, education, employment);
+
+
+
     }
 
 }
