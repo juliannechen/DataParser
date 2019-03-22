@@ -12,15 +12,16 @@ public class DataManager {
         String[] educationLines = Utils.cleanfile(educationFile, 5);
         String[] employmentLines = Utils.cleanfile(employmentFile, 8);
 
-        addStateObjects(electionLines);
-        addCountyObjects(electionLines);
-        loadELectionDataIntoObject(electionLines);
-        loadEducationDataIntoObjects(educationLines);
-        loadEmploymentDataIntoObjects(employmentLines);
+        addStateObjects(electionLines, 1);
+        addCountyObjects(electionLines, 1);
+        loadELectionDataIntoObject(electionLines, 1);
+        loadEducationDataIntoObjects(educationLines, 5);
+        loadEmploymentDataIntoObjects(employmentLines, 8);
     }
 
-    private static void loadEmploymentDataIntoObjects(String[] employmentLines) {
-        for (String line : employmentLines) {
+    private static void loadEmploymentDataIntoObjects(String[] employmentLines, int startIndex) {
+        for (int i = startIndex; i < employmentLines.length; i++) {
+            String line = employmentLines[i];
             String[] dataline = line.split(",");
             Employment e = new Employment((Integer.parseInt(dataline[7])), (Integer.parseInt(dataline[8])), (Integer.parseInt(dataline[9])), (Integer.parseInt(dataline[10])));
             String countyName = dataline[2];
@@ -30,8 +31,9 @@ public class DataManager {
 
     }
 
-    private static void loadELectionDataIntoObject(String[] electionLines) {
-        for (String line : electionLines) {
+    private static void loadELectionDataIntoObject(String[] electionLines, int startIndex) {
+        for (int i = startIndex; i < electionLines.length; i++) {
+            String line = electionLines[i];
             String[] dataline = line.split(",");
             Election e = new Election((Double.parseDouble(dataline[1])), (Double.parseDouble(dataline[2])), (Double.parseDouble(dataline[3])));
             String countyName = dataline[9];
@@ -41,11 +43,16 @@ public class DataManager {
 
     }
 
-    private static void loadEducationDataIntoObjects(String[] educationLines) {
-        for (String line : educationLines) {
+    private static void loadEducationDataIntoObjects(String[] educationLines, int startIndex) {
+        for (int i = startIndex; i < educationLines.length; i++) {
+            String line = educationLines[i];
             String[] dataline = line.split(",");
             Education e = new Education(Double.parseDouble(dataline[7]), Double.parseDouble(dataline[8]), Double.parseDouble(dataline[9]), Double.parseDouble(dataline[10]));
             String countyName = dataline[2];
+            if (countyName == null) {
+                System.out.println("ERROR: non-existant state " + countyName);
+                continue;
+            }
             County county = getCounty(countyName);
             county.setEducation(e);
         }
@@ -63,8 +70,9 @@ public class DataManager {
         return null;
     }
 
-    private static void addCountyObjects(String[] lines) {
-        for (String line : lines) {
+    private static void addCountyObjects(String[] lines, int startIndex) {
+        for (int i = startIndex; i < lines.length; i++) {
+            String line = lines[i];
             String[] dataline = line.split(",");
             String stateName = dataline[8];
             System.out.println("state name: " + stateName);
@@ -89,9 +97,10 @@ public class DataManager {
         return null;
     }
 
-    private static void addStateObjects(String[] lines) {
+    private static void addStateObjects(String[] lines, int startIndex) {
         ArrayList<State> stateList = new ArrayList<>();
-        for (String line : lines) {
+        for (int i = startIndex; i < lines.length; i++) {
+            String line = lines[i];
             String[] dataline = line.split(",");
             String stateName = dataline[8];
             if (!stateList.contains(stateName)) {
@@ -114,3 +123,5 @@ public class DataManager {
         this.states = states;
     }
 }
+
+
