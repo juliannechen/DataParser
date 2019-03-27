@@ -4,11 +4,11 @@ public class Education {
     private double someCollege;
     private double bachelorsOrMore;
 
-    public Education(double noHighSchool, double onlyHighSchool, double someCollege, double bachelorsOrMore) {
-        this.noHighSchool = noHighSchool;
+    public Education(double onlyHighSchool) {
+//        this.noHighSchool = noHighSchool;
         this.onlyHighSchool = onlyHighSchool;
-        this.someCollege = someCollege;
-        this.bachelorsOrMore = bachelorsOrMore;
+//        this.someCollege = someCollege;
+//        this.bachelorsOrMore = bachelorsOrMore;
     }
 
     public double getNoHighSchool() {
@@ -43,3 +43,4 @@ public class Education {
         this.bachelorsOrMore = bachelorsOrMore;
     }
 }
+

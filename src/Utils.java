@@ -22,7 +22,6 @@ public class Utils {
     }
 
     public static String[] cleanfile(String data, int startIndex) {
-        //TODO: eliminate lines 0-startIndex
         String[] lines = data.split("\n");
         for (int i = startIndex; i < lines.length; i++) {
             int currentIndex = 0;

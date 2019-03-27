@@ -3,7 +3,7 @@ public class Employment {
     private double unemployedPercent;
     private County county;
 
-    public Employment(int totalLaborForce, int employedLaborForce, int unemployedLaborForce, double unemployedPercent) {
+    public Employment(int unemployedLaborForce) {
         this.totalLaborForce = totalLaborForce;
         this.employedLaborForce = employedLaborForce;
         this.unemployedLaborForce = unemployedLaborForce;
@@ -51,3 +51,4 @@ public class Employment {
     }
 
 }
+

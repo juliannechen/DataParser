@@ -4,10 +4,19 @@ public class County {
     private Election vote;
     private Education education;
     private Employment employment;
+    private int centers;
 
     public County(String name, int fips) {
         this.name = name;
         this.fips = fips;
+    }
+
+    public int getCenters() {
+        return centers;
+    }
+
+    public void setCenters(int centers) {
+        this.centers = centers;
     }
 
     public String getName() {
