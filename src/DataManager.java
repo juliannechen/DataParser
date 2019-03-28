@@ -73,6 +73,9 @@ public class DataManager {
                 int unemployed = (Integer.parseInt(dataline[44].trim()));
                 Employment e = new Employment(unemployed);
                 String countyName = dataline[2];
+                if(countyName.contains(" ")) {
+                    countyName = countyName.substring(0,countyName.length()-3);
+                }
                 County county = getCounty(countyName);
                 if (county != null) {
                     county.setEmployment(e);
@@ -137,8 +140,9 @@ public class DataManager {
                 continue;
             }
             String countyName = dataline[9];
-            int fips = Integer.parseInt(dataline[10]);
-            state.addCounty(new County(countyName, fips));
+            if(!state.getCounties().contains(countyName)) {
+                state.addCounty(new County(countyName));
+            }
         }
     }
 
@@ -169,6 +173,23 @@ public class DataManager {
         }
         DataManager dataManager = new DataManager(stateList);
         dataManager.setStates(stateList);
+    }
+
+    public static void printData() {
+        System.out.println("state, county, high school only, unemployed labor force, number of community centers");
+        State state = getState("CA");
+        ArrayList<County> counties = state.getCounties();
+        for (County c : counties) {
+            String countyName = c.getName();
+            double highSchoolOnly = c.getEducation().getOnlyHighSchool();
+            double unemployment = c.getEmployment().getUnemployedLaborForce();
+            int numOfCommunityCenters = c.getCenters();
+            System.out.println(state.getName() + ", " + countyName + ", " + highSchoolOnly + ", " + unemployment + ", " + numOfCommunityCenters);
+
+        }
+
+
+
     }
 
     public void addState(State s) {

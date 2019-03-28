@@ -48,14 +48,14 @@ public class Utils {
     }
 
     private static String cleanSubstring(String str, int firstQuote, int secondQuote) {
-        if (str.contains("[a-zA-Z]+")) return str.substring(firstQuote + 1, secondQuote);
         String before = str.substring(0, firstQuote);
         String after = str.substring(secondQuote + 1);
 
         String temp = str.substring(firstQuote + 1, secondQuote);
-        temp = temp.replaceAll(" ", "");
+        if (temp.contains("[a-zA-Z]+")) return before+temp+after;
         temp = temp.replaceAll(",", "");
         temp = temp.replaceAll("$", "");
+        temp = temp.trim();
 
         return before + temp + after;
     }

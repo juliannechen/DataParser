@@ -13,6 +13,7 @@ public class Main {
         String communityCenters = Utils.readFileAsString("data/community-care-licensing-adult-residential-facility-locations.csv");
 
         DataManager.loadAllData(election, education, employment, communityCenters);
+        //DataManager.printData();
 
 
 

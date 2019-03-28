@@ -6,7 +6,7 @@ public class County {
     private Employment employment;
     private int centers;
 
-    public County(String name, int fips) {
+    public County(String name) {
         this.name = name;
         this.fips = fips;
     }
