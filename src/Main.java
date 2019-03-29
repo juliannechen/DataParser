@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /***
  * main class for data parser
  */
@@ -13,9 +11,8 @@ public class Main {
         String communityCenters = Utils.readFileAsString("data/community-care-licensing-adult-residential-facility-locations.csv");
 
         DataManager.loadAllData(election, education, employment, communityCenters);
-        //DataManager.printData();
-
-
+        String data = DataManager.getData();
+        Utils.writeDataToFile("/Users/Julianne/Documents/DataParser/data", data);
 
     }
 

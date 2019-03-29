@@ -1,5 +1,3 @@
-import com.sun.deploy.util.StringUtils;
-
 import java.util.ArrayList;
 
 public class DataManager {
@@ -17,11 +15,12 @@ public class DataManager {
 
         addStateObjects(electionLines, 1);
         addCountyObjects(electionLines, 1);
-        //loadELectionDataIntoObject(electionLines, 1);
+        //loadElectionDataIntoObject(electionLines, 1);
         loadEducationDataIntoObjects(educationLines, 5);
         loadEmploymentDataIntoObjects(employmentLines, 8);
         loadCommunityCenterIntoObjects(communityCenterLines, 1);
     }
+
 
     private static void loadCommunityCenterIntoObjects(String[] communityCenterLines, int startIndex) {
         for (int i = startIndex; i < communityCenterLines.length; i++) {
@@ -33,7 +32,6 @@ public class DataManager {
                 County county = getCounty(countyName);
                 if(county != null) {
                     county.setCenters(county.getCenters() + 1);
-
                 }
 
             }
@@ -73,7 +71,7 @@ public class DataManager {
                 int unemployed = (Integer.parseInt(dataline[44].trim()));
                 Employment e = new Employment(unemployed);
                 String countyName = dataline[2];
-                if(countyName.contains(" ")) {
+                if(countyName.contains(" ") || !countyName.equals("United States")) {
                     countyName = countyName.substring(0,countyName.length()-3);
                 }
                 County county = getCounty(countyName);
@@ -82,7 +80,6 @@ public class DataManager {
                 }
             }
         }
-
     }
 
 //    private static void loadELectionDataIntoObject(String[] electionLines, int startIndex) {
@@ -188,8 +185,34 @@ public class DataManager {
 
         }
 
+    }
 
-
+    public static String getData() {
+        String output = "State, County, People who only graduated high school, unemployed labor force, number of commuity centers" + "\n";
+        for (int i = 0; i < states.size(); i++) {
+            State s = states.get(i);
+            if(s.getName().equals("CA")) {
+                ArrayList<County> counties = s.getCounties();
+                for (int j = 0; j < counties.size(); j++) {
+                    County c = counties.get(j);
+                    String stateName = s.getName();
+                    String countyName = c.getName();
+                    Education education = c.getEducation();
+                    Employment employment = c.getEmployment();
+                    double gradHighSchool = 0;
+                    double unemployed = 0;
+                    if(education != null) {
+                        gradHighSchool = education.getOnlyHighSchool();
+                    }
+                    if(employment != null) {
+                        unemployed = employment.getUnemployedLaborForce();
+                    }
+                    int communityCenters = c.getCenters();
+                    output+=(stateName + ", " + countyName + ", " + gradHighSchool + ", " + unemployed + ", " + communityCenters + "\n");
+                }
+            }
+        }
+        return output;
     }
 
     public void addState(State s) {
@@ -204,6 +227,7 @@ public class DataManager {
         this.states = states;
     }
 }
+
 
 
 

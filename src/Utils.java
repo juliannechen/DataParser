@@ -1,7 +1,8 @@
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 public class Utils {
 
@@ -21,8 +22,34 @@ public class Utils {
         return output.toString();
     }
 
+    public static void writeDataToFile(String filePath, String data) {
+        try (PrintWriter writer = new PrintWriter(new File("test.csv"))) {
+
+            writer.write(data);
+
+            System.out.println("done!");
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+
+//        File outFile = new File(filePath);
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
+//            writer.write(data);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+       }
+    }
+
+    public void saveDataToFile (String file) {
+        String result = "";
+        writeDataToFile(file, result);
+    }
+
+
     public static String[] cleanfile(String data, int startIndex) {
         String[] lines = data.split("\n");
+
         for (int i = startIndex; i < lines.length; i++) {
             int currentIndex = 0;
             String dataline = lines[i];
@@ -60,4 +87,4 @@ public class Utils {
         return before + temp + after;
     }
 
-}
+}
